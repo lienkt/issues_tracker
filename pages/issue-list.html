@@ -1,0 +1,37 @@
+<div id="issue-list" class="space-y-4">
+  <!-- Issue items will be rendered here -->
+</div>
+
+<template id="issue-template">
+  <div class="bg-white p-4 rounded-xl shadow border relative">
+    <div class="flex justify-between items-center mb-2">
+      <h3 class="text-lg font-semibold text-gray-800 issue-title">[Title]</h3>
+      <span
+        class="text-xs font-semibold px-2 py-1 rounded-full issue-status bg-green-100 text-green-700"
+      >
+        OPEN
+      </span>
+    </div>
+
+    <div class="text-sm text-gray-600 mb-3">
+      <p><strong>Author:</strong> <span class="issue-author">[Author]</span></p>
+      <p>
+        <strong>Severity:</strong>
+        <span class="issue-severity">[Severity]</span>
+      </p>
+    </div>
+
+    <div class="flex gap-2">
+      <button
+        class="btn-close bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600 text-sm"
+      >
+        Close
+      </button>
+      <button
+        class="btn-delete bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 text-sm"
+      >
+        Delete
+      </button>
+    </div>
+  </div>
+</template>
