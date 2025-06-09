@@ -1,3 +1,37 @@
+let initialIssues = [
+  {
+    id: "1",
+    title: "Fix login bug on mobile",
+    author: "Anna",
+    severity: "High",
+    status: "open",
+  },
+  {
+    id: "2",
+    title: "Update UI colors for dark mode",
+    author: "John",
+    severity: "Low",
+    status: "closed",
+  },
+];
+
+function addIssue(issues, issue) {
+  // issues.unshift(issue);
+  return [issue, ...issues];
+}
+
+function deleteIssue(issues, id) {
+  return issues.filter((issue) => issue.id !== id);
+}
+
+function toggleIssueStatus(issues, id) {
+  return issues.map((issue) =>
+    issue.id === id
+      ? { ...issue, status: issue.status === "open" ? "closed" : "open" }
+      : issue
+  );
+}
+
 async function loadHTML(id, file) {
   await fetch(file)
     .then((res) => res.text())
@@ -6,7 +40,7 @@ async function loadHTML(id, file) {
     });
 }
 
-async function initForm() {
+async function initForm(currentIssues, setIssues) {
   await loadHTML("form-container", "pages/add-new-issues.html");
   const form = document.getElementById("issue-form");
 
@@ -25,14 +59,15 @@ async function initForm() {
         status: "open",
       };
 
-      addIssue(newIssue);
+      const updatedIssues = addIssue(currentIssues(), newIssue);
+      setIssues(updatedIssues);
       form.reset();
-      renderIssues();
+      renderIssues(updatedIssues, setIssues);
     }
   });
 }
 
-async function renderIssues() {
+async function renderIssues(issues, setIssues) {
   await loadHTML("issues-container", "pages/issue-list.html");
   const container = document.getElementById("issue-list");
   const template = document.getElementById("issue-template");
@@ -56,12 +91,6 @@ async function renderIssues() {
       statusEl.textContent = "CLOSED";
       statusEl.classList.remove("bg-green-100", "text-green-700");
       statusEl.classList.add("bg-gray-300", "text-gray-600");
-    }
-
-    if (issue.status === "closed") {
-      statusEl.textContent = "CLOSED";
-      statusEl.classList.remove("bg-green-100", "text-green-700");
-      statusEl.classList.add("bg-gray-300", "text-gray-600");
 
       toggleBtn.textContent = "Open";
       toggleBtn.classList.remove("bg-yellow-500", "hover:bg-yellow-600");
@@ -77,19 +106,28 @@ async function renderIssues() {
     }
 
     toggleBtn.onclick = () => {
-      issue.status = issue.status === "open" ? "closed" : "open";
-      renderIssues();
+      const updated = toggleIssueStatus(issues, issue.id);
+      setIssues(updated);
+      renderIssues(updated, setIssues);
     };
 
     deleteBtn.onclick = () => {
-      deleteIssue(issue.id);
-      renderIssues();
+      const updated = deleteIssue(issues, issue.id);
+      setIssues(updated);
+      renderIssues(updated, setIssues);
     };
 
     container.appendChild(node);
   });
 }
 
+// State management
+let issues = initialIssues;
+const getIssues = () => issues;
+const setIssues = (newIssues) => {
+  issues = newIssues;
+};
+
 // Init
-initForm();
-renderIssues();
+initForm(getIssues, setIssues);
+renderIssues(getIssues(), setIssues);
