@@ -5,13 +5,42 @@
     <script src="https://cdn.tailwindcss.com"></script>
   </head>
   <body class="bg-gray-100 min-h-screen p-4">
-    <h1 class="text-3xl font-bold mb-4 text-center">Issues Tracker</h1>
+    <div class="max-w-3xl mx-auto px-4">
+      <h1 class="text-3xl font-bold mb-4 text-center">Issues Tracker</h1>
 
-    <!-- Form -->
-    <div id="form-container" class="mb-6"></div>
+      <!-- Form -->
+      <div id="form-container" class="mb-6"></div>
 
-    <!-- Issues -->
-    <div id="issues-container"></div>
+      <div>
+        <div class="text-2xl font-bold mb-4">List Issues:</div>
+        <input
+          type="text"
+          id="search-input"
+          placeholder="Search issues by title..."
+          class="p-2 border rounded mb-4"
+        />
+
+        <label for="issue-title" class="block mb-1 font-medium text-gray-500"
+          >Filter:</label
+        >
+        <select id="status-filter" class="p-2 border rounded mb-4 ml-2">
+          <option value="all">All</option>
+          <option value="open">Open</option>
+          <option value="closed">Closed</option>
+        </select>
+
+        <label for="issue-title" class="block mb-1 font-medium text-gray-500"
+          >Order By:
+        </label>
+        <select id="sort-order" class="p-2 border rounded mb-4 ml-2">
+          <option value="asc">ASC</option>
+          <option value="desc">DESC</option>
+        </select>
+      </div>
+
+      <!-- Issues -->
+      <div id="issues-container"></div>
+    </div>
 
     <script src="assets/js/script.js"></script>
   </body>

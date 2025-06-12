@@ -1,20 +1,3 @@
-let initialIssues = [
-  {
-    id: "1",
-    title: "Fix login bug on mobile",
-    author: "Anna",
-    severity: "High",
-    status: "open",
-  },
-  {
-    id: "2",
-    title: "Update UI colors for dark mode",
-    author: "John",
-    severity: "Low",
-    status: "closed",
-  },
-];
-
 function addIssue(issues, issue) {
   // issues.unshift(issue);
   return [issue, ...issues];
@@ -121,13 +104,83 @@ async function renderIssues(issues, setIssues) {
   });
 }
 
+async function fetchIssues() {
+  const response = await fetch("assets/data/issues.json");
+  const data = await response.json();
+  return data;
+}
+
+function sortIssuesByTitle(issues, order) {
+  const sorted = [...issues];
+  sorted.sort((a, b) => {
+    const titleA = a.title.toLowerCase();
+    const titleB = b.title.toLowerCase();
+
+    if (order === "asc") {
+      return titleA.localeCompare(titleB);
+    } else {
+      return titleB.localeCompare(titleA);
+    }
+    // if (order === "asc") {
+    //   return titleA < titleB ? -1 : titleA > titleB ? 1 : 0;
+    // } else {
+    //   return titleA > titleB ? -1 : titleA < titleB ? 1 : 0;
+    // }
+  });
+
+  return sorted;
+}
+
+function filterSearchAndSortIssues(issues, keyword, status, order) {
+  const lowerKeyword = keyword.trim().toLowerCase();
+
+  const filtered = issues.filter((issue) => {
+    const matchTitle = issue.title.toLowerCase().includes(lowerKeyword);
+    const matchStatus = status === "all" || issue.status === status;
+    return matchTitle && matchStatus;
+  });
+
+  return sortIssuesByTitle(filtered, order);
+}
+
+function setupFilters(getIssues, setIssues) {
+  const searchInput = document.getElementById("search-input");
+  const statusSelect = document.getElementById("status-filter");
+  const sortSelect = document.getElementById("sort-order");
+
+  if (!searchInput || !statusSelect || !sortSelect) return;
+
+  const applyFilters = () => {
+    const keyword = searchInput.value;
+    const status = statusSelect.value;
+    const order = sortSelect.value;
+
+    const filtered = filterSearchAndSortIssues(
+      getIssues(),
+      keyword,
+      status,
+      order
+    );
+    renderIssues(filtered, setIssues);
+  };
+
+  searchInput.addEventListener("input", applyFilters);
+  statusSelect.addEventListener("change", applyFilters);
+  sortSelect.addEventListener("change", applyFilters);
+}
+
 // State management
-let issues = initialIssues;
+// let issues = initialIssues;
+let issues = [];
 const getIssues = () => issues;
 const setIssues = (newIssues) => {
   issues = newIssues;
 };
 
 // Init
-initForm(getIssues, setIssues);
-renderIssues(getIssues(), setIssues);
+fetchIssues().then((data) => {
+  setIssues(data);
+  initForm(getIssues, setIssues);
+  renderIssues(getIssues(), setIssues);
+  setupFilters(getIssues, setIssues);
+});

@@ -1,0 +1,16 @@
+[
+  {
+    "id": "1",
+    "title": "Fix login bug on mobile",
+    "author": "Anna",
+    "severity": "High",
+    "status": "open"
+  },
+  {
+    "id": "2",
+    "title": "Update UI colors for dark mode",
+    "author": "John",
+    "severity": "Low",
+    "status": "closed"
+  }
+]
