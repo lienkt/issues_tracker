@@ -12,5 +12,19 @@
     "author": "John",
     "severity": "Low",
     "status": "closed"
+  },
+  {
+    "id": "3",
+    "title": "Update UI colors for dark mode 2",
+    "author": "John",
+    "severity": "Low",
+    "status": "open"
+  },
+  {
+    "id": "4",
+    "title": "Update UI colors for dark mode 3",
+    "author": "John",
+    "severity": "Low",
+    "status": "closed"
   }
 ]
